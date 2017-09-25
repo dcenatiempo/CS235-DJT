@@ -10,6 +10,7 @@
 *    said, you may need to modify this once or twice to get it to work.
 ************************************************************************/
 
+#include <cassert>
 #include <iostream>    // for CIN and COUT
 #include <string>      //
 #include "queue.h"     // your Queue class should be in queue.h
@@ -137,7 +138,6 @@ void testSimple()
 template <class T>
 ostream & operator << (ostream & out, queue <T> q) 
 {
-   
    out << "{ ";
    while (!q.empty())
    {

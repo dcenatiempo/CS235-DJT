@@ -17,8 +17,8 @@ a.out: queue.h assignment03.o dollars.o stock.o
 	g++ -o a.out assignment03.o dollars.o stock.o
 	tar -cf assignment03.tar *.h *.cpp makefile
 
-dollarsTest: dollars.o dollarsTest.cpp
-	g++ -o dollarsTest dollars.o dollarsTest.cpp
+##dollarsTest: dollars.o dollarsTest.cpp
+##	g++ -o dollarsTest dollars.o dollarsTest.cpp
 
 ##############################################################
 # The individual components
