@@ -32,5 +32,11 @@ assignment03.o: queue.h assignment03.cpp
 dollars.o: dollars.h dollars.cpp
 	g++ -c dollars.cpp
 
-stock.o: stock.h stock.cpp queue.h
+stock.o: stock.h stock.cpp queue.h portfolio.h
 	g++ -c stock.cpp
+
+portfolio.o: portfolio.h portfolio.cpp queue.h transaction.h dollars.h
+	g++ -c portfolio.cpp
+
+transaction.o: transaction.h transaction.cpp dollars.h
+	g++ -c transaction.cpp

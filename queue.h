@@ -10,7 +10,7 @@
 
 #ifndef queue_h
 #define queue_h
-
+#include <new>
 namespace custom
 {
 /************************************************
@@ -30,7 +30,7 @@ private:
    int iTail () const { return (numPush - 1) % numCapacity; }
 public:
    // constructors and destructors
-   queue() {this->numPush = 0; this->numPop = 0; this->numCapacity = 0; this->data = NULL;}
+   queue() {this->numPush = 0; this->numPop = 0; this->numCapacity = 0; this->data = nullptr;}
    queue(int capacity) throw (const char *);
    queue(const queue & rhs) throw (const char *);
    ~queue();
@@ -188,12 +188,12 @@ throw(const char *)
          for (int i = iHead(); i < (iHead()+size()); i++)
          {
             if (i< numCapacity/2)
-               tempData[i] = this->data[i];
-            else tempData[i] = this->data[i-numCapacity/2];
+               tempData[i % numCapacity] = this->data[i];
+            else tempData[i % numCapacity] = this->data[(i-numCapacity/2)%(numCapacity/2)];
          }
          
          // save data to correct location
-         delete [] data;
+         delete [] this->data;
          this->data = tempData;
       }
       catch (std::bad_alloc)
@@ -207,10 +207,10 @@ throw(const char *)
    numPush++;
    this->data[iTail()] = data;
    
-   std::cerr << "elements: " << size() << "/" << numCapacity << std::endl;
-   std::cerr << "push: " << numPush << ", pop: " << numPop << std::endl;
-   std::cerr << "iHead: " << this->data[iHead()] << " at index " << iHead() << std::endl;
-   std::cerr << " iTail: " << this->data[iTail()] << " at index " << iTail() << std::endl;
+   //std::cerr << "elements: " << size() << "/" << numCapacity << std::endl;
+   //std::cerr << "push: " << numPush << ", pop: " << numPop << std::endl;
+   //std::cerr << "iHead: " << this->data[iHead()] << " at index " << iHead() << std::endl;
+   //std::cerr << " iTail: " << this->data[iTail()] << " at index " << iTail() << std::endl;
    
    return;
 }
@@ -245,7 +245,7 @@ throw (const char *)
 {
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
-      throw "ERROR: Unable to reference the element from an empty queue";
+      throw "ERROR: attempting to access an element in an empty queue";
    
    return data[iTail()];
 }
@@ -263,7 +263,7 @@ throw (const char *)
 {
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
-      throw "ERROR: Unable to reference the element from an empty queue";
+      throw "ERROR: attempting to access an element in an empty queue";
    return data[iTail()];
 }
 
@@ -279,7 +279,7 @@ throw (const char *)
 {
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
-      throw "ERROR: Unable to reference the element from an empty queue";
+      throw "ERROR: attempting to access an element in an empty queue";
    
    return data[iHead()];
 }
@@ -296,7 +296,7 @@ throw (const char *)
 {
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
-      throw "ERROR: Unable to reference the element from an empty queue";
+      throw "ERROR: attempting to access an element in an empty queue";
    return data[iHead()];
 }
    
