@@ -47,45 +47,51 @@ void Portfolio :: buy(int qty, Dollars price)
    holdings.push(Transaction(qty, price));
 }
 
-void Portfolio :: sell(int qty, Dollars price)
+void Portfolio :: sell(int salesQty, Dollars salesPrice)
 {
    Dollars cost = 0;
-   Dollars rev = price * qty;
-   int tempQty = qty;
-   int total = countShares(holdings);
-   if (qty > total)
+   Dollars rev = 0;
+   int tempQty = salesQty;
+   int totalShares = countShares(holdings);
+   if (salesQty > totalShares)
    {
       cout << "Error: Cannot sell more shares than you own!\n";
-      cout << "You only have " << total << " shares to sell\n";
+      cout << "You only have " << totalShares << " shares to sell\n";
    }
    else
    {
-      saleHistory.push(Transaction(qty, price));
       while (tempQty)
       {
-         if (holdings.front().getQty() <= tempQty)
+         int purchaseQty = holdings.front().getQty();
+         Dollars purchasePrice = holdings.front().getPrice();
+         if (purchaseQty <= tempQty)
          {
-            cost += holdings.front().getPrice() * holdings.front().getQty();
-            tempQty -= holdings.front().getQty();
+            cost = purchasePrice * purchaseQty;
+            rev = salesPrice*purchaseQty;
+            tempQty -= purchaseQty;
             holdings.pop();
-            
+            saleHistory.push(Transaction(purchaseQty, salesPrice));
+            proceeds.push(rev-cost);
          }
-         else if (holdings.front().getQty() > tempQty)
+         else if (purchaseQty > tempQty)
          {
-            cost += holdings.front().getPrice() * tempQty;
-            holdings.front() = Transaction(holdings.front().getQty() - tempQty, holdings.front().getPrice());
+            cost = purchasePrice * tempQty;
+            rev = salesPrice*tempQty;
+            holdings.front() = Transaction(purchaseQty - tempQty, purchasePrice);
+            saleHistory.push(Transaction(tempQty, salesPrice));
+            proceeds.push(rev-cost);
             tempQty = 0;
          }
       }
-      proceeds.push(rev-cost);
+
    }
 }
 
 void Portfolio :: display(std::ostream & out) const
 {
-   cout << "Currently held:\n";
    if (holdings.size() > 0)
    {
+      cout << "Currently held:\n";
       queue <Transaction> tempHoldings = holdings;
       for (int i = 0; i < holdings.size(); i++)
       {
