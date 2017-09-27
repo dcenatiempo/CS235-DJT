@@ -13,9 +13,10 @@
 ##############################################################
 # The main rule
 ##############################################################
-a.out: queue.h assignment03.o dollars.o stock.o
-	g++ -o a.out assignment03.o dollars.o stock.o
+a.out: assignment03.o dollars.o stock.o portfolio.o transaction.o
+	g++ -o a.out assignment03.o dollars.o stock.o portfolio.o transaction.o
 	tar -cf assignment03.tar *.h *.cpp makefile
+
 
 ##dollarsTest: dollars.o dollarsTest.cpp
 ##	g++ -o dollarsTest dollars.o dollarsTest.cpp
@@ -26,7 +27,7 @@ a.out: queue.h assignment03.o dollars.o stock.o
 #      dollars.o      : the Dollars class
 #      stock.o        : the logic for the stock program
 ##############################################################
-assignment03.o: queue.h assignment03.cpp
+assignment03.o: queue.h assignment03.cpp stock.h dollars.h
 	g++ -c assignment03.cpp
 
 dollars.o: dollars.h dollars.cpp
