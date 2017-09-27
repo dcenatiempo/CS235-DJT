@@ -60,27 +60,20 @@ template <class T>
 queue <T> :: queue(int capacity)
 throw (const char *)
 {
+   this->numPush = 0;
+   this->numPop = 0;
+   this->numCapacity = capacity;
    // do nothing if there is nothing to do.
-   // since we can't grow an array, this is kinda pointless
    if (numCapacity <= 0)
    {
-      this->numPush = 0;
-      this->numPop = 0;
-      this->numCapacity = 0;
       this->data = NULL;
       return;
    }
-   
    // attempt to allocate
    try
       { data = new T[capacity]; }
    catch (std::bad_alloc)
       { throw "ERROR: Unable to allocate buffer"; }
-   
-   // copy over the stuff
-   this->numPush = 0;
-   this->numPop = 0;
-   this->numCapacity = capacity;
 }
 
 /*******************************************
@@ -200,6 +193,7 @@ throw(const char *)
          }
          
          // save data to correct location
+         delete [] data;
          this->data = tempData;
       }
       catch (std::bad_alloc)
