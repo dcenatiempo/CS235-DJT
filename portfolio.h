@@ -34,5 +34,4 @@ private:
    int countShares(queue <Transaction> temp);
 };
 
-std::ostream & operator << (std::ostream & out, const Portfolio & rhs);
 #endif

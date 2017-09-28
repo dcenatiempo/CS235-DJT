@@ -10,11 +10,11 @@
 #define TRANSACTION_H
 
 #include "dollars.h"       // for DOLLARS defined in StockTransaction
-#include <iostream>        // for ISTREAM, OSTREAM, CIN, and COUT
 
 class Transaction
 {
 public:
+   // constructors
    Transaction() {
       this->qty = 1;
       this->price = 1;
@@ -37,23 +37,10 @@ public:
    Dollars getPrice() const { return price; }
    
    
-   // Gets the profit for this transaction
-   Dollars getProfit() const;
-   
-   // Sells a subset of the shares, reducing the share count by the
-   // amount sold; returns the number of shares sold - in case
-   // a caller tries to sell more shares than available
-   Transaction sellShares(int in_sellCount, Dollars in_salePrice);
-   
-   // Displays the transaction
-   void display(std::ostream & out) const;
-   
 private:
    int qty;       // number of shares
    Dollars price; // +sold -bought
 
 };
-
-std::ostream & operator << (std::ostream & out, const Transaction & rhs);
 
 #endif // !TRANSACTION_H

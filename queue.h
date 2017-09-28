@@ -11,6 +11,7 @@
 #ifndef queue_h
 #define queue_h
 #include <new>
+#include <iostream>
 namespace custom
 {
 /************************************************
@@ -23,7 +24,7 @@ private:
    T * data;         // dynamically allocated array of T
    int numPush;      // incremented every time push() called
    int numPop;       // incremented every time pop() called
-   int numCapacity;  // how many items the stck could hold
+   int numCapacity;  // how many items the queue can hold
    // returns index of head (front)
    int iHead () const { return numPop % numCapacity; }
    // return index of tail (back)
@@ -36,11 +37,7 @@ public:
    ~queue();
    // standard container interfaces
    int  size()     const { return numPush - numPop;  }
-   bool empty()    const {
-      bool result = true;
-      if (numPush > numPop)
-         result = false;
-      return result; }
+   bool empty()    const { return numPush == numPop; }
    void clear()          { numPush = 0; numPop = 0;  }
    queue & operator = (const queue & rhs) throw (const char *);
    // queue specific methods
@@ -66,7 +63,7 @@ throw (const char *)
    // do nothing if there is nothing to do.
    if (numCapacity <= 0)
    {
-      this->data = NULL;
+      this->data = nullptr;
       return;
    }
    // attempt to allocate
@@ -89,30 +86,22 @@ throw (const char *)
       numPush = 0;
       numPop = 0;
       numCapacity = 0;
-      data = NULL;
+      data = nullptr;
       return;
    }
-   
    // attempt to allocate
    try
-   {
-      data = new T[rhs.numCapacity];
-   }
+      { data = new T[rhs.numCapacity]; }
    catch (std::bad_alloc)
-   {
-      throw "ERROR: Unable to allocate buffer";
-   }
-   
+      { throw "ERROR: Unable to allocate buffer"; }
    // copy over the capacity
-   numPush = rhs.numPush;
-   numPop = rhs.numPop;
-   numCapacity = rhs.numCapacity;
+   numPush = rhs.size();
+   numPop = 0;
+   numCapacity = rhs.size();
 
    // copy the items over one at a time using the assignment operator
-   for (int i = 0; i < numCapacity; i++)
-   {
-      data[i] = rhs.data[i];
-   }
+   for (int i = 0; i < numPush; i++)
+      data[i] = rhs.data[ (rhs.iHead() + i) % rhs.numCapacity ];
 }
 
 /*******************************************
@@ -121,7 +110,7 @@ throw (const char *)
 template <class T>
 queue <T> :: ~queue()
 {
-   clear();
+   delete [] data;
 }
 /*******************************************
  * queue :: Assignment
@@ -137,19 +126,13 @@ throw (const char *)
    {
       // attempt to allocate memory
       try
-      {
-         data = new T[rhs.size()];
-      }
+         { data = new T[rhs.size()]; }
       catch (std::bad_alloc)
-      {
-         throw "ERROR: Unable to allocate buffer";
-      }
+         { throw "ERROR: Unable to allocate buffer"; }
       numCapacity = numPush;
    }
-   
    for (int i = 0; i < numPush; i++)
-      data[i] = rhs.data[rhs.iHead()+i];
-      
+      data[i] = rhs.data[ (rhs.iHead() + i) % rhs.numCapacity ];
    return *this;
 }
 
@@ -174,8 +157,7 @@ throw(const char *)
          { this->data = new T[1]; }
       catch (std::bad_alloc)
          { throw "ERROR: Unable to allocate a new buffer for queue"; }
-   } // end if for check for empty queue
-   
+   }
    else if (numCapacity == size())
    {
       numCapacity *= 2;
@@ -183,7 +165,6 @@ throw(const char *)
       try
       {
          T * tempData = new T[numCapacity];
-
          // copy data to a new, larger array
          for (int i = iHead(); i < (iHead()+size()); i++)
          {
@@ -197,10 +178,8 @@ throw(const char *)
          this->data = tempData;
       }
       catch (std::bad_alloc)
-      {
-         throw "ERROR: Unable to allocate a new buffer for queue";
-      }
-   } // end if for capacity <= elements check
+         { throw "ERROR: Unable to allocate a new buffer for queue"; }
+   }
    
    //---Add Element to queue:---
    //attempt to allocate memory
@@ -211,8 +190,6 @@ throw(const char *)
    //std::cerr << "push: " << numPush << ", pop: " << numPop << std::endl;
    //std::cerr << "iHead: " << this->data[iHead()] << " at index " << iHead() << std::endl;
    //std::cerr << " iTail: " << this->data[iTail()] << " at index " << iTail() << std::endl;
-   
-   return;
 }
    
 /*****************************************************
@@ -227,9 +204,8 @@ void queue <T> :: pop()
    // if the queue is empty, there is nothing to do.
    if(size() == 0 || numCapacity <= 0)
       return;
-   
-   numPop++;
-   return;
+   else
+      numPop++;
 }
 
 /*****************************************************
@@ -246,8 +222,7 @@ throw (const char *)
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
       throw "ERROR: attempting to access an element in an empty queue";
-   
-   return data[iTail()];
+   return data[ iTail() ];
 }
 
 /*****************************************************
@@ -264,7 +239,7 @@ throw (const char *)
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
       throw "ERROR: attempting to access an element in an empty queue";
-   return data[iTail()];
+   return data[ iTail() ];
 }
 
 /*****************************************************
@@ -280,8 +255,7 @@ throw (const char *)
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
       throw "ERROR: attempting to access an element in an empty queue";
-   
-   return data[iHead()];
+   return data[ iHead() ];
 }
 
 /*****************************************************
@@ -297,7 +271,7 @@ throw (const char *)
    // if the queue is empty, throw an error.
    if(size() == 0 || numCapacity <= 0)
       throw "ERROR: attempting to access an element in an empty queue";
-   return data[iHead()];
+   return data[ iHead() ];
 }
    
 }; // end custom namespace

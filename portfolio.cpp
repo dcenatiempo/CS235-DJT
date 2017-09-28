@@ -1,19 +1,19 @@
-//
-//  portfolio.cpp
-//  project03
-//
-//  Created by Devin Cenatiempo on 9/27/17.
-//  Copyright © 2017 Devin Cenatiempo. All rights reserved.
-//
+/***********************************************************************
+ * Implementation:
+ *    STOCK
+ * Summary:
+ *    This will contain the implementation for stocksBuySell() as well
+ *    as any other function or class implementation you need
+ * Author
+ *    <your names here>
+ **********************************************************************/
 
 #include "portfolio.h"
 using std::cout;
 using std::cin;
 using std::endl;
 using std::string;
-using std::ostream;
 using std::ios;
-//using namespace std;
 using namespace custom;
 
 /* private variables
@@ -21,6 +21,12 @@ using namespace custom;
  queue <Transaction> saleHistory;
  queue <Dollars> proceeds;
  */
+
+/*****************************************************
+ * PORTFOLIO :: COUNTSHARES
+ * returns total # of shares in a Transaction queue
+ * queue <Transaction> --> int
+ *****************************************************/
 int Portfolio :: countShares(queue <Transaction> temp){
    int count = 0;
    int size = temp.size();
@@ -31,7 +37,14 @@ int Portfolio :: countShares(queue <Transaction> temp){
    }
    return count;
 }
-Dollars Portfolio::getProceeds() const{
+
+/*****************************************************
+ * PORTFOLIO :: GETPROCEEDS
+ * returns total of proceeds from proceeds queue
+ * void --> Dollars
+ *****************************************************/
+Dollars Portfolio::getProceeds() const
+{
    queue <Dollars> proceedsQueue = proceeds;
    Dollars totalProceeds = 0;
    for (int i = 0; i < proceeds.size(); i++)
@@ -42,11 +55,23 @@ Dollars Portfolio::getProceeds() const{
    return totalProceeds;
 }
 
+/*****************************************************
+ * PORTFOLIO :: BUY
+ * Adds a transaction to the holdings queue
+ * int, Dollars --> void
+ *****************************************************/
 void Portfolio :: buy(int qty, Dollars price)
 {
    holdings.push(Transaction(qty, price));
 }
 
+/*****************************************************
+ * PORTFOLIO :: SELL
+ * Sells specified stocks in portfolio
+ * Adds transaction(s) to salesHistory queue
+ * Mutates/Removes transaction(s) from holdings queue
+ * int, Dollars --> void
+ *****************************************************/
 void Portfolio :: sell(int salesQty, Dollars salesPrice)
 {
    Dollars cost = 0;
@@ -64,15 +89,19 @@ void Portfolio :: sell(int salesQty, Dollars salesPrice)
       {
          int purchaseQty = holdings.front().getQty();
          Dollars purchasePrice = holdings.front().getPrice();
+         // If selling more than what is contained in first item
+         //   in holdings que, then completely remove that transaction
+         //   and contine the loop
          if (purchaseQty <= tempQty)
          {
             cost = purchasePrice * purchaseQty;
             rev = salesPrice*purchaseQty;
-            tempQty -= purchaseQty;
+            tempQty -= purchaseQty; // if these are equal, then loop ends
             holdings.pop();
             saleHistory.push(Transaction(purchaseQty, salesPrice));
             proceeds.push(rev-cost);
          }
+         // if this condition is met, then loop ends
          else if (purchaseQty > tempQty)
          {
             cost = purchasePrice * tempQty;
@@ -83,10 +112,14 @@ void Portfolio :: sell(int salesQty, Dollars salesPrice)
             tempQty = 0;
          }
       }
-
    }
 }
 
+/*****************************************************
+ * PORTFOLIO :: DISPLAY
+ * Displays contents of portfolio
+ * ostream --> void
+ *****************************************************/
 void Portfolio :: display(std::ostream & out) const
 {
    if (holdings.size() > 0)
@@ -95,7 +128,8 @@ void Portfolio :: display(std::ostream & out) const
       queue <Transaction> tempHoldings = holdings;
       for (int i = 0; i < holdings.size(); i++)
       {
-         cout << "\tBought " << tempHoldings.front().getQty() << " shares at " << tempHoldings.front().getPrice() << endl;
+         cout << "\tBought " << tempHoldings.front().getQty()
+              << " shares at " << tempHoldings.front().getPrice() << endl;
          tempHoldings.pop();
       }
       //Bought 20 shares at $1.75
@@ -107,18 +141,14 @@ void Portfolio :: display(std::ostream & out) const
       queue <Dollars> tempProceeds = proceeds;
       for (int i = 0; i < saleHistory.size(); i++)
       {
-         cout << "\tSold " << tempSales.front().getQty() << " shares at " << tempSales.front().getPrice() << " for a profit of " << tempProceeds.front() << endl;
+         cout << "\tSold " << tempSales.front().getQty()
+              << " shares at " << tempSales.front().getPrice()
+              << " for a profit of " << tempProceeds.front() << endl;
          tempSales.pop();
          tempProceeds.pop();
       }
       //Sold 2 shares at $2.00 for a profit of $1.00
    }
-   cout << "Proceeds: " << getProceeds();
-   cout << endl;
+   cout << "Proceeds: " << getProceeds() << endl;
    //Proceeds: $1.00
-}
-
-std::ostream & operator << (std::ostream & out, const Portfolio & rhs)
-{
-   return out;
 }

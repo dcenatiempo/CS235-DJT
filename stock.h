@@ -18,7 +18,5 @@
 // the interactive stock buy/sell function
 void stocksBuySell();
 
-Dollars calculateProceeds(custom::queue<Dollars> bought, custom::queue <Dollars> sold );
-
 #endif // STOCK_H
 

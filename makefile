@@ -39,5 +39,3 @@ stock.o: stock.h stock.cpp queue.h portfolio.h
 portfolio.o: portfolio.h portfolio.cpp queue.h transaction.h dollars.h
 	g++ -c portfolio.cpp
 
-transaction.o: transaction.h transaction.cpp dollars.h
-	g++ -c transaction.cpp
