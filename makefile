@@ -13,8 +13,8 @@
 ##############################################################
 # The main rule
 ##############################################################
-a.out: assignment03.o dollars.o stock.o portfolio.o transaction.o
-	g++ -o a.out assignment03.o dollars.o stock.o portfolio.o transaction.o
+a.out: assignment03.o dollars.o stock.o portfolio.o
+	g++ -o a.out assignment03.o dollars.o stock.o portfolio.o
 	tar -cf assignment03.tar *.h *.cpp makefile
 
 

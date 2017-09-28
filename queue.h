@@ -31,7 +31,7 @@ private:
    int iTail () const { return (numPush - 1) % numCapacity; }
 public:
    // constructors and destructors
-   queue() {this->numPush = 0; this->numPop = 0; this->numCapacity = 0; this->data = nullptr;}
+   queue() {this->numPush = 0; this->numPop = 0; this->numCapacity = 0; this->data = NULL;}
    queue(int capacity) throw (const char *);
    queue(const queue & rhs) throw (const char *);
    ~queue();
@@ -63,7 +63,7 @@ throw (const char *)
    // do nothing if there is nothing to do.
    if (numCapacity <= 0)
    {
-      this->data = nullptr;
+      this->data = NULL;
       return;
    }
    // attempt to allocate
@@ -86,7 +86,7 @@ throw (const char *)
       numPush = 0;
       numPop = 0;
       numCapacity = 0;
-      data = nullptr;
+      data = NULL;
       return;
    }
    // attempt to allocate

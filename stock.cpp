@@ -41,7 +41,7 @@ void stocksBuySell()
    {
       do
       {
-         cout << " > ";
+         cout << "> ";
          cin  >> instruction;
          if (instruction == "buy")
          {
